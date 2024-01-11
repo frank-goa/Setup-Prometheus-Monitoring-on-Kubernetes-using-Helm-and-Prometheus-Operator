@@ -189,6 +189,9 @@ kubectl port-forward service/mongodb-exporter-prometheus-mongodb-exporter 9216
 
 <img width="1329" alt="Screenshot 2024-01-11 at 17 15 08" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/eb5167fa-89fd-45e0-9a87-455514acb055">
 
-
-
+- The ports stay inuse - kill the ports using this (3000, 9090, 9216)
+```bash
+lsof -i:3000
+kill -9 18020
+```
 
