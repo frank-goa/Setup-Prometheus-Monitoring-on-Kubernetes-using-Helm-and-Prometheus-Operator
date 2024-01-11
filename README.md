@@ -43,133 +43,40 @@ kubectl get all
 
 <img width="1374" alt="Screenshot 2024-01-09 at 10 04 43" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/496a7057-5a6e-444d-b06a-5e46ad3b213e">
 
-- prom.yaml
+## How to access Grafana:
 ```bash
-Name:               prometheus-prometheus-kube-prometheus-prometheus
-Namespace:          default
-CreationTimestamp:  Tue, 09 Jan 2024 09:11:16 +0000
-Selector:           app.kubernetes.io/instance=prometheus-kube-prometheus-prometheus,app.kubernetes.io/managed-by=prometheus-operator,app.kubernetes.io/name=prometheus,operator.prometheus.io/name=prometheus-kube-prometheus-prometheus,operator.prometheus.io/shard=0,prometheus=prometheus-kube-prometheus-prometheus
-Labels:             app=kube-prometheus-stack-prometheus
-                    app.kubernetes.io/instance=prometheus
-                    app.kubernetes.io/managed-by=Helm
-                    app.kubernetes.io/part-of=kube-prometheus-stack
-                    app.kubernetes.io/version=55.7.0
-                    chart=kube-prometheus-stack-55.7.0
-                    heritage=Helm
-                    operator.prometheus.io/mode=server
-                    operator.prometheus.io/name=prometheus-kube-prometheus-prometheus
-                    operator.prometheus.io/shard=0
-                    release=prometheus
-Annotations:        meta.helm.sh/release-name: prometheus
-                    meta.helm.sh/release-namespace: default
-                    prometheus-operator-input-hash: 14619287190508193130
-Replicas:           1 desired | 1 total
-Update Strategy:    RollingUpdate
-Pods Status:        1 Running / 0 Waiting / 0 Succeeded / 0 Failed
-Pod Template:
-  Labels:           app.kubernetes.io/instance=prometheus-kube-prometheus-prometheus
-                    app.kubernetes.io/managed-by=prometheus-operator
-                    app.kubernetes.io/name=prometheus
-                    app.kubernetes.io/version=2.48.1
-                    operator.prometheus.io/name=prometheus-kube-prometheus-prometheus
-                    operator.prometheus.io/shard=0
-                    prometheus=prometheus-kube-prometheus-prometheus
-  Annotations:      kubectl.kubernetes.io/default-container: prometheus
-  Service Account:  prometheus-kube-prometheus-prometheus
-  Init Containers:
-   init-config-reloader:
-    Image:      quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
-    Port:       8080/TCP
-    Host Port:  0/TCP
-    Command:
-      /bin/prometheus-config-reloader
-    Args:
-      --watch-interval=0
-      --listen-address=:8080
-      --config-file=/etc/prometheus/config/prometheus.yaml.gz
-      --config-envsubst-file=/etc/prometheus/config_out/prometheus.env.yaml
-      --watched-dir=/etc/prometheus/rules/prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0
-    Environment:
-      POD_NAME:   (v1:metadata.name)
-      SHARD:     0
-    Mounts:
-      /etc/prometheus/config from config (rw)
-      /etc/prometheus/config_out from config-out (rw)
-      /etc/prometheus/rules/prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 from prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 (rw)
-  Containers:
-   prometheus:
-    Image:      quay.io/prometheus/prometheus:v2.48.1
-    Port:       9090/TCP
-    Host Port:  0/TCP
-    Args:
-      --web.console.templates=/etc/prometheus/consoles
-      --web.console.libraries=/etc/prometheus/console_libraries
-      --config.file=/etc/prometheus/config_out/prometheus.env.yaml
-      --web.enable-lifecycle
-      --web.external-url=http://prometheus-kube-prometheus-prometheus.default:9090
-      --web.route-prefix=/
-      --storage.tsdb.retention.time=10d
-      --storage.tsdb.path=/prometheus
-      --storage.tsdb.wal-compression
-      --web.config.file=/etc/prometheus/web_config/web-config.yaml
-    Liveness:     http-get http://:http-web/-/healthy delay=0s timeout=3s period=5s #success=1 #failure=6
-    Readiness:    http-get http://:http-web/-/ready delay=0s timeout=3s period=5s #success=1 #failure=3
-    Startup:      http-get http://:http-web/-/ready delay=0s timeout=3s period=15s #success=1 #failure=60
-    Environment:  <none>
-    Mounts:
-      /etc/prometheus/certs from tls-assets (ro)
-      /etc/prometheus/config_out from config-out (ro)
-      /etc/prometheus/rules/prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 from prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 (rw)
-      /etc/prometheus/web_config/web-config.yaml from web-config (ro,path="web-config.yaml")
-      /prometheus from prometheus-prometheus-kube-prometheus-prometheus-db (rw)
-   config-reloader:
-    Image:      quay.io/prometheus-operator/prometheus-config-reloader:v0.70.0
-    Port:       8080/TCP
-    Host Port:  0/TCP
-    Command:
-      /bin/prometheus-config-reloader
-    Args:
-      --listen-address=:8080
-      --reload-url=http://127.0.0.1:9090/-/reload
-      --config-file=/etc/prometheus/config/prometheus.yaml.gz
-      --config-envsubst-file=/etc/prometheus/config_out/prometheus.env.yaml
-      --watched-dir=/etc/prometheus/rules/prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0
-    Environment:
-      POD_NAME:   (v1:metadata.name)
-      SHARD:     0
-    Mounts:
-      /etc/prometheus/config from config (rw)
-      /etc/prometheus/config_out from config-out (rw)
-      /etc/prometheus/rules/prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 from prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0 (rw)
-  Volumes:
-   config:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  prometheus-prometheus-kube-prometheus-prometheus
-    Optional:    false
-   tls-assets:
-    Type:                Projected (a volume that contains injected data from multiple sources)
-    SecretName:          prometheus-prometheus-kube-prometheus-prometheus-tls-assets-0
-    SecretOptionalName:  <nil>
-   config-out:
-    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:     Memory
-    SizeLimit:  <unset>
-   prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      prometheus-prometheus-kube-prometheus-prometheus-rulefiles-0
-    Optional:  false
-   web-config:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  prometheus-prometheus-kube-prometheus-prometheus-web-config
-    Optional:    false
-   prometheus-prometheus-kube-prometheus-prometheus-db:
-    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
-    Medium:     
-    SizeLimit:  <unset>
-Volume Claims:  <none>
-Events:
-  Type    Reason            Age   From                    Message
-  ----    ------            ----  ----                    -------
-  Normal  SuccessfulCreate  53m   statefulset-controller  create Pod prometheus-prometheus-kube-prometheus-prometheus-0 in StatefulSet prometheus-prometheus-kube-prometheus-prometheus successful
-
+kubectl get service
 ```
+<img width="1380" alt="Screenshot 2024-01-11 at 04 05 39" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/97a99de4-c266-4d53-b11b-95bb63f70836">
+
+(Prometheus-grafana is the main UI) - but it is using ClusterIP -
+In production environments, it is done using Ingress.
+In our case in lab environment, we will access Grafana using pord-forward
+
+<img width="1372" alt="Screenshot 2024-01-11 at 04 07 18" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/2317c05a-da07-49ef-86fd-eeb4afbb9b43">
+
+---
+---
+
+<img width="1377" alt="Screenshot 2024-01-11 at 04 23 20" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/79d70937-1111-49df-9c29-94e9cd2fca6c">
+
+---
+### Enabling Port-Forward for Grafana on Port 3000
+
+<img width="1372" alt="Screenshot 2024-01-11 at 04 24 46" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/7da60a06-8d6d-4fb6-93d2-c4d025b9feaf">
+
+---
+### Accessng Grafana - http://127.0.0.1:3000/
+
+<img width="1510" alt="Screenshot 2024-01-11 at 04 27 00" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/5b8a121d-344f-4498-b424-ad33f5b0ddb6">
+
+---
+### Enabling Port-Forward for Prometheus on Port 9090
+
+<img width="1375" alt="Screenshot 2024-01-11 at 04 30 57" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/b30e389d-1afa-4615-8e19-6a7d21ba0ceb">
+
+---
+### Accessng Prometheus - http://127.0.0.1:9090/
+
+<img width="1512" alt="Screenshot 2024-01-11 at 04 31 48" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/5ff7b2cb-9cca-43d3-bad7-8930c7363ac0">
+
