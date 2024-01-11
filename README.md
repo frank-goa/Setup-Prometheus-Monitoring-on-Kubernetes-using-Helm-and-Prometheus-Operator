@@ -1,17 +1,14 @@
 # Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator
-Setup Prometheus Monitoring on Kubernetes using Helm and Prometheus Operator
+- Setup Prometheus Monitoring on Kubernetes using Helm and Prometheus Operator (https://www.youtube.com/watch?v=QoDqxm7ybLc&t=28s)
+
 
 ```bash
 helm install prometheus prometheus-community/kube-prometheus-stack
-```
-
-<img width="1382" alt="Screenshot 2024-01-09 at 09 17 36" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/55157ef5-4860-4381-9a35-c8e7295c5df8">
-
-```bash
 kubectl get all 
 ```
 
-<img width="1379" alt="Screenshot 2024-01-09 at 09 18 15" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/20f906b2-8a88-499b-bd5b-b86d3f26f634">
+<img width="1390" alt="Screenshot 2024-01-11 at 15 40 43" src="https://github.com/frank-goa/Setup-Prometheus-Monitoring-on-Kubernetes-using-Helm-and-Prometheus-Operator/assets/137857643/29f68863-13a5-434b-83e1-c346932b4b15">
+
 
 
 ## Big Picture...
